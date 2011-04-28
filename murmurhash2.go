@@ -58,6 +58,7 @@ func (me *MurmurHash2A) Add(data []byte) {
 
 	var k uint32
 	for length >= 4 {
+		// binary.BigEndian.Uint32
 		k = uint32(data[i+0]) & 0xFF
 		k |= (uint32(data[i+1]) & 0xFF) << 8
 		k |= (uint32(data[i+2]) & 0xFF) << 16
@@ -97,6 +98,7 @@ func (me *MurmurHash2A) Write(p []byte) (n int, err os.Error) {
 func (me *MurmurHash2A) Sum32() uint32 {
 	return me.End()
 }
+// binary.BigEndian.PutUint32
 func (me *MurmurHash2A) Sum() []byte {
 	p := make([]byte, 4)
 	s := me.Sum32()

@@ -1,8 +1,9 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=murmurhash
-GOFILES=\
-	murmurhash.go\
+TARG=murmurhash3
+CGOFILES=\
+	murmurhash3.go
 
-include $(GOROOT)/src/Make.cmd
+CGO_LDFLAGS=-lMurmurhash3
 
+include $(GOROOT)/src/Make.pkg
