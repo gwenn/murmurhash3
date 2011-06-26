@@ -4,6 +4,9 @@ TARG=murmurhash3
 CGOFILES=\
 	murmurhash3.go
 
-CGO_LDFLAGS=-lMurmurhash3
+# TODO Create two files (one for the amd64 platform and another for th 386 platform
+# See pkg/big...
+
+CGO_LDFLAGS=-lMurmurHash3
 
 include $(GOROOT)/src/Make.pkg

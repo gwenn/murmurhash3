@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/binary"
 	"flag"
 	"fmt"
 	"hash"
@@ -58,11 +59,7 @@ func (me *MurmurHash2A) Add(data []byte) {
 
 	var k uint32
 	for length >= 4 {
-		// binary.BigEndian.Uint32
-		k = uint32(data[i+0]) & 0xFF
-		k |= (uint32(data[i+1]) & 0xFF) << 8
-		k |= (uint32(data[i+2]) & 0xFF) << 16
-		k |= (uint32(data[i+3]) & 0xFF) << 24
+		k = binary.LittleEndian.Uint32(data[i:])
 		me.hash, k = mmix(me.hash, k)
 		i += 4
 		length -= 4
@@ -98,24 +95,25 @@ func (me *MurmurHash2A) Write(p []byte) (n int, err os.Error) {
 func (me *MurmurHash2A) Sum32() uint32 {
 	return me.End()
 }
-// binary.BigEndian.PutUint32
+
 func (me *MurmurHash2A) Sum() []byte {
 	p := make([]byte, 4)
 	s := me.Sum32()
-	p[0] = byte(s >> 24)
-	p[1] = byte(s >> 16)
-	p[2] = byte(s >> 8)
-	p[3] = byte(s)
+	binary.BigEndian.PutUint32(p, s)
 	return p
 }
 
 func main() {
 	flag.Parse()
 	me := new(MurmurHash2A)
+	me.Begin(0)
 	for i := 0; i < flag.NArg(); i++ {
-		me.Begin(0)
+		//me.Begin(0)
 		s := flag.Arg(i)
 		me.Add([]byte(s))
-		fmt.Printf("%s: %d\n", s, me.End())
+		//h := me.End()
+		//fmt.Printf("%s: %d (%x)\n", s, h, h)
 	}
+	h := me.End()
+	fmt.Printf("%d (%x)\n", h, h)
 }
