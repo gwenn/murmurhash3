@@ -3,7 +3,78 @@ package murmurhash3
 
 import (
 	"encoding/binary"
+	"hash"
+	"os"
 )
+
+type (
+	murmurhash3A uint32
+	murmurhash3C uint32
+	murmurhash3F uint64
+)
+
+func New3A() hash.Hash32 {
+	var m murmurhash3A = 0
+	return &m
+}
+func (m *murmurhash3A) Reset() { *m = 0 }
+func (m *murmurhash3A) Size() int {
+	return 4
+}
+func (m *murmurhash3A) Write(p []byte) (n int, err os.Error) {
+	*m = murmurhash3A(Murmur3A(p, uint32(*m)))
+	return len(p), nil
+}
+func (m *murmurhash3A) Sum32() uint32 {
+	return uint32(*m)
+}
+func (m *murmurhash3A) Sum() []byte {
+	p := make([]byte, 4)
+	binary.BigEndian.PutUint32(p, uint32(*m))
+	return p
+}
+
+func New3C() hash.Hash32 {
+	var m murmurhash3C = 0
+	return &m
+}
+func (m *murmurhash3C) Reset() { *m = 0 }
+func (m *murmurhash3C) Size() int {
+	return 4
+}
+func (m *murmurhash3C) Write(p []byte) (n int, err os.Error) {
+	*m = murmurhash3C(Murmur3C(p, uint32(*m))[0])
+	return len(p), nil
+}
+func (m *murmurhash3C) Sum32() uint32 {
+	return uint32(*m)
+}
+func (m *murmurhash3C) Sum() []byte {
+	p := make([]byte, 4)
+	binary.BigEndian.PutUint32(p, uint32(*m))
+	return p
+}
+
+func New3F() hash.Hash64 {
+	var m murmurhash3F = 0
+	return &m
+}
+func (m *murmurhash3F) Reset() { *m = 0 }
+func (m *murmurhash3F) Size() int {
+	return 8
+}
+func (m *murmurhash3F) Write(p []byte) (n int, err os.Error) {
+	*m = murmurhash3F(Murmur3F(p, uint64(*m))[0])
+	return len(p), nil
+}
+func (m *murmurhash3F) Sum64() uint64 {
+	return uint64(*m)
+}
+func (m *murmurhash3F) Sum() []byte {
+	p := make([]byte, 8)
+	binary.BigEndian.PutUint64(p, uint64(*m))
+	return p
+}
 
 func rotl32(x uint32, r uint8) uint32 {
 	return (x << r) | (x >> (32 - r))
@@ -42,7 +113,7 @@ func Murmur3A(key []byte, seed uint32) uint32 {
 
 	// body
 	for i := 0; i < nblocks; i++ {
-		k1 := binary.LittleEndian.Uint32(key[i*8:]) // TODO Validate
+		k1 := binary.LittleEndian.Uint32(key[i*4:]) // TODO Validate
 
 		k1 *= c1
 		k1 = rotl32(k1, 15)
@@ -93,10 +164,10 @@ func Murmur3C(key []byte, seed uint32) [4]uint32 {
 
 	// body
 	for i := 0; i < nblocks; i++ {
-		k1 := binary.LittleEndian.Uint32(key[(i*4+0)*8:]) // TODO Validate
-		k2 := binary.LittleEndian.Uint32(key[(i*4+1)*8:])
-		k3 := binary.LittleEndian.Uint32(key[(i*4+2)*8:])
-		k4 := binary.LittleEndian.Uint32(key[(i*4+3)*8:])
+		k1 := binary.LittleEndian.Uint32(key[(i*4+0)*4:]) // TODO Validate
+		k2 := binary.LittleEndian.Uint32(key[(i*4+1)*4:])
+		k3 := binary.LittleEndian.Uint32(key[(i*4+2)*4:])
+		k4 := binary.LittleEndian.Uint32(key[(i*4+3)*4:])
 
 		k1 *= c1
 		k1 = rotl32(k1, 15)
@@ -232,10 +303,10 @@ func Murmur3C(key []byte, seed uint32) [4]uint32 {
 	return [4]uint32{h1, h2, h3, h4}
 }
 
-func Murmur3F(key []byte, seed uint32) [2]uint64 {
+func Murmur3F(key []byte, seed uint64) [2]uint64 {
 	nblocks := len(key) / 16
-	var h1 uint64 = uint64(seed)
-	var h2 uint64 = uint64(seed)
+	var h1 uint64 = seed
+	var h2 uint64 = seed
 
 	var c1 uint64 = 0x87c37b91114253d5
 	var c2 uint64 = 0x4cf5ad432745937f

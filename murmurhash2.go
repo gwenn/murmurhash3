@@ -1,9 +1,7 @@
-package main
+package murmurhash2
 
 import (
 	"encoding/binary"
-	"flag"
-	"fmt"
 	"hash"
 	"os"
 )
@@ -95,25 +93,9 @@ func (me *MurmurHash2A) Write(p []byte) (n int, err os.Error) {
 func (me *MurmurHash2A) Sum32() uint32 {
 	return me.End()
 }
-
 func (me *MurmurHash2A) Sum() []byte {
 	p := make([]byte, 4)
 	s := me.Sum32()
 	binary.BigEndian.PutUint32(p, s)
 	return p
-}
-
-func main() {
-	flag.Parse()
-	me := new(MurmurHash2A)
-	me.Begin(0)
-	for i := 0; i < flag.NArg(); i++ {
-		//me.Begin(0)
-		s := flag.Arg(i)
-		me.Add([]byte(s))
-		//h := me.End()
-		//fmt.Printf("%s: %d (%x)\n", s, h, h)
-	}
-	h := me.End()
-	fmt.Printf("%d (%x)\n", h, h)
 }

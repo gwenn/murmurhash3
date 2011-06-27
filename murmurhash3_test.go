@@ -1,6 +1,9 @@
 package murmurhash3
 
 import "testing"
+import "hash"
+
+const testDataSize = 40
 
 func TestMurmur3A(t *testing.T) {
 	expected := uint32(3127628307)
@@ -30,5 +33,28 @@ func TestMurmur3F(t *testing.T) {
 	}
 }
 
-//func BenchmarkMurmur3A(b *testing.B) {
-//}
+func Benchmark3A(b *testing.B) {
+	benchmark(b, New3A())
+}
+func Benchmark3C(b *testing.B) {
+	benchmark(b, New3C())
+}
+func Benchmark3F(b *testing.B) {
+	benchmark(b, New3F())
+}
+
+func benchmark(b *testing.B, h hash.Hash) {
+	b.ResetTimer()
+	b.SetBytes(testDataSize)
+	data := make([]byte, testDataSize)
+	for i := range data {
+		data[i] = byte(i + 'a')
+	}
+
+	b.StartTimer()
+	for todo := b.N; todo != 0; todo-- {
+		h.Reset()
+		h.Write(data)
+		h.Sum()
+	}
+}
