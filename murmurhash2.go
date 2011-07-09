@@ -9,7 +9,7 @@ import (
 const (
 	m    uint32 = 0x5bd1e995
 	r    uint32 = 24
-	Size = 4
+	Size        = 4
 )
 
 type MurmurHash2A struct {
