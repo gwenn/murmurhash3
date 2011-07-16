@@ -1,6 +1,6 @@
 include $(GOROOT)/src/Make.inc
 
-TARG=murmurhash3
+TARG=github.com/gwenn/murmurhash3
 GOFILES=\
 	murmurhash3.go
 
