@@ -27,10 +27,13 @@ func (m *murmurhash3A) Write(p []byte) (n int, err error) {
 func (m *murmurhash3A) Sum32() uint32 {
 	return uint32(*m)
 }
-func (m *murmurhash3A) Sum() []byte {
-	p := make([]byte, 4)
-	binary.BigEndian.PutUint32(p, uint32(*m))
-	return p
+func (m *murmurhash3A) Sum(in []byte) []byte {
+	v := uint32(*m)
+	in = append(in, byte(v>>24))
+	in = append(in, byte(v>>16))
+	in = append(in, byte(v>>8))
+	in = append(in, byte(v))
+	return in
 }
 
 func New3C() hash.Hash32 {
@@ -48,10 +51,13 @@ func (m *murmurhash3C) Write(p []byte) (n int, err error) {
 func (m *murmurhash3C) Sum32() uint32 {
 	return uint32(*m)
 }
-func (m *murmurhash3C) Sum() []byte {
-	p := make([]byte, 4)
-	binary.BigEndian.PutUint32(p, uint32(*m))
-	return p
+func (m *murmurhash3C) Sum(in []byte) []byte {
+	v := uint32(*m)
+	in = append(in, byte(v>>24))
+	in = append(in, byte(v>>16))
+	in = append(in, byte(v>>8))
+	in = append(in, byte(v))
+	return in
 }
 
 func New3F() hash.Hash64 {
@@ -69,10 +75,17 @@ func (m *murmurhash3F) Write(p []byte) (n int, err error) {
 func (m *murmurhash3F) Sum64() uint64 {
 	return uint64(*m)
 }
-func (m *murmurhash3F) Sum() []byte {
-	p := make([]byte, 8)
-	binary.BigEndian.PutUint64(p, uint64(*m))
-	return p
+func (m *murmurhash3F) Sum(in []byte) []byte {
+	v := uint64(*m)
+	in = append(in, byte(v>>56))
+	in = append(in, byte(v>>48))
+	in = append(in, byte(v>>40))
+	in = append(in, byte(v>>32))
+	in = append(in, byte(v>>24))
+	in = append(in, byte(v>>16))
+	in = append(in, byte(v>>8))
+	in = append(in, byte(v))
+	return in
 }
 
 func rotl32(x uint32, r uint8) uint32 {

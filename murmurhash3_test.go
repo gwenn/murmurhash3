@@ -55,6 +55,6 @@ func benchmark(b *testing.B, h hash.Hash) {
 	for todo := b.N; todo != 0; todo-- {
 		h.Reset()
 		h.Write(data)
-		h.Sum()
+		h.Sum(nil)
 	}
 }
