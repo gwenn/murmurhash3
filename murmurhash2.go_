@@ -3,7 +3,6 @@ package murmurhash2
 import (
 	"encoding/binary"
 	"hash"
-	"os"
 )
 
 const (
@@ -86,7 +85,7 @@ func (me *MurmurHash2A) Reset() { me.Begin(0) }
 func (me *MurmurHash2A) Size() int {
 	return Size
 }
-func (me *MurmurHash2A) Write(p []byte) (n int, err os.Error) {
+func (me *MurmurHash2A) Write(p []byte) (n int, err error) {
 	me.Add(p)
 	return len(p), nil
 }

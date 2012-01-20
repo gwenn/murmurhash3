@@ -20,6 +20,9 @@ func (m *murmurhash3A) Reset() { *m = 0 }
 func (m *murmurhash3A) Size() int {
 	return 4
 }
+func (m *murmurhash3A) BlockSize() int {
+	return 4
+}
 func (m *murmurhash3A) Write(p []byte) (n int, err error) {
 	*m = murmurhash3A(Murmur3A(p, uint32(*m)))
 	return len(p), nil
@@ -44,6 +47,9 @@ func (m *murmurhash3C) Reset() { *m = 0 }
 func (m *murmurhash3C) Size() int {
 	return 4
 }
+func (m *murmurhash3C) BlockSize() int {
+	return 16
+}
 func (m *murmurhash3C) Write(p []byte) (n int, err error) {
 	*m = murmurhash3C(Murmur3C(p, uint32(*m))[0])
 	return len(p), nil
@@ -67,6 +73,9 @@ func New3F() hash.Hash64 {
 func (m *murmurhash3F) Reset() { *m = 0 }
 func (m *murmurhash3F) Size() int {
 	return 8
+}
+func (m *murmurhash3F) BlockSize() int {
+	return 16
 }
 func (m *murmurhash3F) Write(p []byte) (n int, err error) {
 	*m = murmurhash3F(Murmur3F(p, uint64(*m))[0])
