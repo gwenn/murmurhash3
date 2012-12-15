@@ -32,11 +32,7 @@ func (m *murmurhash3A) Sum32() uint32 {
 }
 func (m *murmurhash3A) Sum(in []byte) []byte {
 	v := uint32(*m)
-	in = append(in, byte(v>>24))
-	in = append(in, byte(v>>16))
-	in = append(in, byte(v>>8))
-	in = append(in, byte(v))
-	return in
+	return append(in, byte(v>>24), byte(v>>16), byte(v>>8), byte(v))
 }
 
 func New3C() hash.Hash32 {
@@ -59,11 +55,7 @@ func (m *murmurhash3C) Sum32() uint32 {
 }
 func (m *murmurhash3C) Sum(in []byte) []byte {
 	v := uint32(*m)
-	in = append(in, byte(v>>24))
-	in = append(in, byte(v>>16))
-	in = append(in, byte(v>>8))
-	in = append(in, byte(v))
-	return in
+	return append(in, byte(v>>24), byte(v>>16), byte(v>>8), byte(v))
 }
 
 func New3F() hash.Hash64 {
@@ -86,15 +78,7 @@ func (m *murmurhash3F) Sum64() uint64 {
 }
 func (m *murmurhash3F) Sum(in []byte) []byte {
 	v := uint64(*m)
-	in = append(in, byte(v>>56))
-	in = append(in, byte(v>>48))
-	in = append(in, byte(v>>40))
-	in = append(in, byte(v>>32))
-	in = append(in, byte(v>>24))
-	in = append(in, byte(v>>16))
-	in = append(in, byte(v>>8))
-	in = append(in, byte(v))
-	return in
+	return append(in, byte(v>>56), byte(v>>48), byte(v>>40), byte(v>>32), byte(v>>24), byte(v>>16), byte(v>>8), byte(v))
 }
 
 func rotl32(x uint32, r uint8) uint32 {
@@ -146,8 +130,8 @@ func Murmur3A(key []byte, seed uint32) uint32 {
 	}
 
 	// tail
-	var k1 uint32 = 0
 	var tail []byte = key[nblocks*4:] // TODO Validate
+	var k1 uint32 = 0
 	switch len(key) & 3 {
 	case 3:
 		k1 ^= uint32(tail[2]) << 16
@@ -228,11 +212,11 @@ func Murmur3C(key []byte, seed uint32) [4]uint32 {
 	}
 
 	// tail
+	var tail []byte = key[nblocks*16:] // TODO Validate
 	var k1 uint32 = 0
 	var k2 uint32 = 0
 	var k3 uint32 = 0
 	var k4 uint32 = 0
-	var tail []byte = key[nblocks*16:] // TODO Validate
 	switch len(key) & 15 {
 	case 15:
 		k4 ^= uint32(tail[14]) << 16
@@ -357,9 +341,9 @@ func Murmur3F(key []byte, seed uint64) [2]uint64 {
 	}
 
 	// tail
+	var tail []byte = key[nblocks*16:] // TODO Validate
 	var k1 uint64 = 0
 	var k2 uint64 = 0
-	var tail []byte = key[nblocks*16:] // TODO Validate
 	switch len(key) & 15 {
 	case 15:
 		k2 ^= uint64(tail[14]) << 48
