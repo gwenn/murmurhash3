@@ -1,3 +1,5 @@
+// +build ignore
+
 package murmurhash2
 
 import (
