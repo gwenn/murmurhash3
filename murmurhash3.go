@@ -13,7 +13,7 @@ type (
 )
 
 func New3A() hash.Hash32 {
-	var m murmurhash3A = 0
+	var m murmurhash3A
 	return &m
 }
 func (m *murmurhash3A) Reset() { *m = 0 }
@@ -36,7 +36,7 @@ func (m *murmurhash3A) Sum(in []byte) []byte {
 }
 
 func New3C() hash.Hash32 {
-	var m murmurhash3C = 0
+	var m murmurhash3C
 	return &m
 }
 func (m *murmurhash3C) Reset() { *m = 0 }
@@ -59,7 +59,7 @@ func (m *murmurhash3C) Sum(in []byte) []byte {
 }
 
 func New3F() hash.Hash64 {
-	var m murmurhash3F = 0
+	var m murmurhash3F
 	return &m
 }
 func (m *murmurhash3F) Reset() { *m = 0 }
@@ -112,7 +112,7 @@ func fmix64(h uint64) uint64 {
 // MurmurHash3 for x86, 32-bit (MurmurHash3_x86_32)
 func Murmur3A(key []byte, seed uint32) uint32 {
 	nblocks := len(key) / 4
-	var h1 uint32 = seed
+	var h1 = seed
 
 	var c1 uint32 = 0xcc9e2d51
 	var c2 uint32 = 0x1b873593
@@ -131,8 +131,8 @@ func Murmur3A(key []byte, seed uint32) uint32 {
 	}
 
 	// tail
-	var tail []byte = key[nblocks*4:] // TODO Validate
-	var k1 uint32 = 0
+	var tail = key[nblocks*4:] // TODO Validate
+	var k1 uint32
 	switch len(key) & 3 {
 	case 3:
 		k1 ^= uint32(tail[2]) << 16
@@ -159,10 +159,10 @@ func Murmur3A(key []byte, seed uint32) uint32 {
 // MurmurHash3 for x86, 128-bit (MurmurHash3_x86_128)
 func Murmur3C(key []byte, seed uint32) [4]uint32 {
 	nblocks := len(key) / 16
-	var h1 uint32 = seed
-	var h2 uint32 = seed
-	var h3 uint32 = seed
-	var h4 uint32 = seed
+	var h1 = seed
+	var h2 = seed
+	var h3 = seed
+	var h4 = seed
 
 	var c1 uint32 = 0x239b961b
 	var c2 uint32 = 0xab0e9789
@@ -214,11 +214,11 @@ func Murmur3C(key []byte, seed uint32) [4]uint32 {
 	}
 
 	// tail
-	var tail []byte = key[nblocks*16:] // TODO Validate
-	var k1 uint32 = 0
-	var k2 uint32 = 0
-	var k3 uint32 = 0
-	var k4 uint32 = 0
+	var tail = key[nblocks*16:] // TODO Validate
+	var k1 uint32
+	var k2 uint32
+	var k3 uint32
+	var k4 uint32
 	switch len(key) & 15 {
 	case 15:
 		k4 ^= uint32(tail[14]) << 16
@@ -313,8 +313,8 @@ func Murmur3C(key []byte, seed uint32) [4]uint32 {
 // MurmurHash3 for x64, 128-bit (MurmurHash3_x64_128)
 func Murmur3F(key []byte, seed uint64) [2]uint64 {
 	nblocks := len(key) / 16
-	var h1 uint64 = seed
-	var h2 uint64 = seed
+	var h1 = seed
+	var h2 = seed
 
 	var c1 uint64 = 0x87c37b91114253d5
 	var c2 uint64 = 0x4cf5ad432745937f
@@ -344,9 +344,9 @@ func Murmur3F(key []byte, seed uint64) [2]uint64 {
 	}
 
 	// tail
-	var tail []byte = key[nblocks*16:] // TODO Validate
-	var k1 uint64 = 0
-	var k2 uint64 = 0
+	var tail = key[nblocks*16:] // TODO Validate
+	var k1 uint64
+	var k2 uint64
 	switch len(key) & 15 {
 	case 15:
 		k2 ^= uint64(tail[14]) << 48
